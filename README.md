@@ -1,66 +1,29 @@
-## Foundry
+# Solady Formal Verification with Kontrol
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This repo showcases how to perform formal verification of mathematical libraries using the [Kontrol](https://docs.runtimeverification.com/kontrol/overview/readme) ([KEVM](https://github.com/runtimeverification/evm-semantics) + [Foundry](https://github.com/foundry-rs/foundry/)) framework. In particular, we formally verify some of the functions present in the [Solady](https://github.com/vectorized/solady) library.
 
-Foundry consists of:
+This is a work in progress, more functions are likely to be verified in the future.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Verification Summary
 
-## Documentation
+We employ two different types of specification for function verification: function equivalence and property satisfaction. Function equivalence means verifying that a Solady function `f_solady` is equivalent to an external function (e.g., Solmate's equivalent) `f_spec`. Property satisfaction means verifying that the function `f_solady` satisfies a property `P`, which should describe the desired behaviour of `f_solady`.
 
-https://book.getfoundry.sh/
+### Verified functions
 
-## Usage
+| Name             | Location           | Equivalence           | Property           |
+|------------------|--------------------|-----------------------|--------------------|
+| FooName : string | FooLocation : path | FooEquivalence : Bool | FooProperty : Bool |
 
-### Build
+## Repository Structure
 
-```shell
-$ forge build
-```
+General description of the repo, plus the location of the tests for the verified functions
 
-### Test
+## Verification Reproduction
 
-```shell
-$ forge test
-```
+Instructions on how to reproduce the verification work.
 
-### Format
+The recommended way of executing the verification script is to log the output trace in a file (called `log.out` here)
 
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+```bash
+time bash test/run-kevm.sh 2>&1 | tee log.out
 ```
