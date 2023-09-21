@@ -16,23 +16,30 @@ contract FixedPointMathLibVerification is Test, KevmUtil {
         kevm.infiniteGas();
     }
 
-    function testMulWadInRange(uint256 x, uint256 y) public {
-        // Assume x * y won't overflow
-        vm.assume(y == 0 || x <= type(uint256).max / y);
+    function testMulWad(uint256 x, uint256 y) public {
 
-        uint256 zSpec = (x * y) / WAD;
-        uint256 zImpl = FixedPointMathLib.mulWad(x, y);
+        if(y == 0 || x <= type(uint256).max / y) {
+            uint256 zSpec = (x * y) / WAD;
+            uint256 zImpl = FixedPointMathLib.mulWad(x, y);
 
-        assertEq(zImpl, zSpec);
+            assertEq(zImpl, zSpec);
+        } else {
+            vm.expectRevert(); // FixedPointMathLib.MulWadFailed.selector
+            FixedPointMathLib.mulWad(x, y);
+        }
+
     }
 
-    function testMulWadUpInRange(uint256 x, uint256 y) public {
-        // Assume x * y + WAD/2 won't overflow
-        vm.assume(y == 0 || x <= (type(uint256).max)/y);
+    function testMulWadUp(uint256 x, uint256 y) public {
 
-        uint256 zSpec = ((x * y)/WAD)*WAD < x * y ? (x * y)/WAD + 1 : (x * y)/WAD;
-        uint256 zImpl = FixedPointMathLib.mulWadUp(x, y);
+        if(y == 0 || x <= (type(uint256).max)/y) {
+            uint256 zSpec = ((x * y)/WAD)*WAD < x * y ? (x * y)/WAD + 1 : (x * y)/WAD;
+            uint256 zImpl = FixedPointMathLib.mulWadUp(x, y);
 
-        assertEq(zImpl, zSpec);
+            assertEq(zImpl, zSpec);
+        } else {
+            vm.expectRevert(); // FixedPointMathLib.MulWadFailed.selector
+            FixedPointMathLib.mulWadUp(x, y);
+        }
     }
 }
