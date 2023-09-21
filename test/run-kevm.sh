@@ -7,62 +7,61 @@ forge_build() {
 }
 
 foundry_kompile() {
-    kevm foundry-kompile --verbose \
-        --require ${lemmas}        \
-        --module-import ${module}  \
-        ${rekompile}               \
-        ${regen}                   \
-        ${llvm_library}
+    kontrolx foundry-kompile           \
+             --verbose                 \
+             --require ${lemmas}       \
+             --module-import ${module} \
+             ${rekompile}              \
+             ${regen}                  \
+             ${llvm_library}
 }
 
 foundry_prove() {
-    kevm foundry-prove                     \
-        --max-depth ${max_depth}           \
-        --max-iterations ${max_iterations} \
-        --bmc-depth ${bmc_depth}           \
-        --workers ${workers}               \
-        --verbose                          \
-        ${reinit}                          \
-        ${debug}                           \
-        ${simplify_init}                   \
-        ${implication_every_block}         \
-        ${break_every_step}                \
-        ${break_on_calls}                  \
-        ${auto_abstract}                   \
-        ${bug_report}                      \
-        ${tests}                           \
-        ${use_booster}                     \
-#        --kore-rpc-command "${kore_rpc_command}"
+    kontrolx foundry-prove                      \
+             --max-depth ${max_depth}           \
+             --max-iterations ${max_iterations} \
+             --smt-timeout ${smt_timeout}       \
+             --workers ${workers}               \
+             --verbose                          \
+             ${reinit}                          \
+             ${debug}                           \
+             ${bug_report}                      \
+             ${simplify_init}                   \
+             ${implication_every_block}         \
+             ${break_every_step}                \
+             ${break_on_calls}                  \
+             ${auto_abstract}                   \
+             ${tests}                           \
+             ${use_booster}
 }
 
 foundry_claim() {
-    kevm prove ${lemmas}                      \
-        --claim ${base_module}-SPEC.${claim}  \
+    kevm prove                               \
+        ${lemmas}                            \
+        --claim ${base_module}-SPEC.${claim} \
         --definition out/kompiled            \
-        --spec-module ${base_module}-SPEC
+        --spec-module ${base_module}-SPEC    \
+        --smt-timeout ${smt_timeout}
 }
 
 lemmas=test/solady-lemmas.k
 base_module=SOLADY-LEMMAS
 module=FixedPointMathLibVerification:${base_module}
 
-claim=first-roadblock
-
 max_depth=10000
 max_iterations=10000
-
-bmc_depth=3
+smt_timeout=100000
 
 # Number of processes run by the prover in parallel
 # Should be at most (M - 8) / 8 in a machine with M GB of RAM
-workers=16
+workers=12
 
 # Switch the options below to turn them on or off
 # TODO: Describe this thoroughly
-regen=--regen # Regenerates all of the K definition files
-regen=
+regen=--regen
+#regen=
 
-rekompile=--rekompile # Rekompiles
+rekompile=--rekompile
 #rekompile=
 
 # Progress is saved automatically so an unfinished proof can be resumed from where it left off
@@ -106,8 +105,11 @@ kore_rpc_command=kore-rpc-booster\ --simplify-after-exec\ --llvm-backend-library
 # List of tests to symbolically execute
 
 tests=""
-tests+="--test FixedPointMathLibVerification.testMulWadInRange "
-#tests+="--test FixedPointMathLibVerification.testMulWadUpInRange "
+tests+="--test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
+tests+="--test FixedPointMathLibVerification.testMulWadUp "
+
+# Name of the claim to execute
+claim=mulWadUp-first-roadblock
 
 # Comment these lines as needed
 pkill kore-rpc || true
