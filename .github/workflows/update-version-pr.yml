@@ -1,0 +1,46 @@
+---
+name: 'Update Version'
+on:
+  push:
+    branches:
+      - '_update-deps/runtimeverification/kontrol'
+
+# Stop in progress workflows on the same branch and same workflow to use latest committed code
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  new-version-test:
+    name: 'Test Tool Update'
+    runs-on: [self-hosted, linux, normal]
+    container:
+      image: ghcr.io/runtimeverification/devops/kup:643101c
+      volumes: 
+        - nixstorekup:/nix/store
+    steps:
+      - name: 'Check out code'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: 'Configure GitHub user'
+        run: |
+          git config user.name devops
+          git config user.email devops@runtimeverification.com
+
+      - name: 'Test New Tool Versions'
+        run: |
+          set -euo pipefail
+          new-version=$(cat deps/kontrol_release)
+          kup install kontrol --version ${new-version}
+          # If all scripts in test.sh pass then the test is successful, else fail 
+          # and print the name of the script that failed
+          for script in ./tests/*.sh; do
+              if ! bash "$script"; then
+                  echo "Test failed: $script"
+                  exit 1
+              else
+                  echo "Test passed: $script"
+              fi
+          done
