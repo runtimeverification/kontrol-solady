@@ -1,10 +1,9 @@
 ---
 name: 'Update Version'
 on:
-  push:
+  pull_request:
     branches:
-      - '_update-deps/runtimeverification/kontrol'
-
+      - master
 # Stop in progress workflows on the same branch and same workflow to use latest committed code
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
