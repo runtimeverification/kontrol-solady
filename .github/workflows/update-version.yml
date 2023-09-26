@@ -3,7 +3,7 @@ name: 'Update Version'
 on:
   push:
     branches:
-      - '_update-deps/runtimeverification/evm-semantics'
+      - '_update-deps/runtimeverification/kontrol'
 
 # Stop in progress workflows on the same branch and same workflow to use latest committed code
 concurrency:
