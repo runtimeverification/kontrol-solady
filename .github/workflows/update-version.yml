@@ -32,7 +32,7 @@ jobs:
       - name: 'Test New Tool Versions'
         run: |
           set -euo pipefail
-          new-version=$(cat deps/evm_release)
+          new-version=$(cat deps/kontrol_release)
           kup install --version ${new-version}
           # If all scripts in test.sh pass then the test is successful, else fail 
           # and print the name of the script that failed
