@@ -1,0 +1,6 @@
+FROM ghcr.io/runtimeverification/devops/kup:643101c16e07e0488dd6f72a5cd0a6cb10f0036d
+# Take input defining version to install
+ARG KEVM_VERSION
+
+# Install kevm 
+RUN kup install kevm --version ${KEVM_VERSION}
