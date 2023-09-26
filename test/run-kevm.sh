@@ -6,36 +6,36 @@ forge_build() {
     forge build
 }
 
-foundry_kompile() {
-    kontrolx foundry-kompile           \
-             --verbose                 \
-             --require ${lemmas}       \
-             --module-import ${module} \
-             ${rekompile}              \
-             ${regen}                  \
-             ${llvm_library}
+kontrol_kompile() {
+    kontrol build                     \
+            --verbose                 \
+            --require ${lemmas}       \
+            --module-import ${module} \
+            ${rekompile}              \
+            ${regen}                  \
+            ${llvm_library}
 }
 
-foundry_prove() {
-    kontrolx foundry-prove                      \
-             --max-depth ${max_depth}           \
-             --max-iterations ${max_iterations} \
-             --smt-timeout ${smt_timeout}       \
-             --workers ${workers}               \
-             --verbose                          \
-             ${reinit}                          \
-             ${debug}                           \
-             ${bug_report}                      \
-             ${simplify_init}                   \
-             ${implication_every_block}         \
-             ${break_every_step}                \
-             ${break_on_calls}                  \
-             ${auto_abstract}                   \
-             ${tests}                           \
-             ${use_booster}
+kontrol_prove() {
+    kontrol prove                              \
+            --max-depth ${max_depth}           \
+            --max-iterations ${max_iterations} \
+            --smt-timeout ${smt_timeout}       \
+            --workers ${workers}               \
+            --verbose                          \
+            ${reinit}                          \
+            ${debug}                           \
+            ${bug_report}                      \
+            ${simplify_init}                   \
+            ${implication_every_block}         \
+            ${break_every_step}                \
+            ${break_on_calls}                  \
+            ${auto_abstract}                   \
+            ${tests}                           \
+            ${use_booster}
 }
 
-foundry_claim() {
+kontrol_claim() {
     kevm prove                               \
         ${lemmas}                            \
         --claim ${base_module}-SPEC.${claim} \
@@ -114,6 +114,6 @@ claim=mulWadUp-first-roadblock
 # Comment these lines as needed
 pkill kore-rpc || true
 forge_build
-foundry_kompile
-foundry_prove
-#foundry_claim
+kontrol_kompile
+kontrol_prove
+#kontrol_claim
