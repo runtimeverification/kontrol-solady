@@ -4,9 +4,6 @@ on:
   pull_request:
     branches:
       - "master"
-  push:
-    branches:
-      - '_update-deps/runtimeverification/kontrol'
 
 # Stop in progress workflows on the same branch and same workflow to use latest committed code
 concurrency:
