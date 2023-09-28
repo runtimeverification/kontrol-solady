@@ -42,9 +42,7 @@ jobs:
             set -euo pipefail
             # If all scripts in test.sh pass then the test is successful, else fail 
             # and print the name of the script that failed
-            # Print the tests folder
-            ls -lR 
-            for script in ./tests/*.sh; do
+            for script in ./test/*.sh; do
                 if ! bash "$script"; then
                     echo "Test failed: $script"
                     exit 1
