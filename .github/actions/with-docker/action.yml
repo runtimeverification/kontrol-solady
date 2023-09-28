@@ -1,0 +1,33 @@
+name: 'With Docker'
+description: 'Run a given stage with Docker Image'
+inputs:
+  container-version:
+    description: 'Docker Image Version'
+    required: true
+  container-name:
+    description: 'Docker Container Name'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+  - name: 'Set up Docker'
+    shell: bash {0}
+    run: |
+      set -euxo pipefail
+      
+      CONTAINER_NAME=${{inputs.container-name}}
+      CONTAINER_VERSION=${{inputs.container-version}}
+
+      docker run                          \
+        --name ${CONTAINER_NAME}          \
+        --rm                              \
+        --interactive                     \
+        --tty                             \
+        --detach                          \
+        --user root                       \
+        --workdir /home/user/workspace            \
+        runtimeverificationinc/kontrol:ubuntu-jammy-${CONTAINER_VERSION}
+
+      # Copy the current Checkout direcotry into the container
+      docker cp . ${CONTAINER_NAME}:/home/user/workspace
+      docker exec ${CONTAINER_NAME} chown -R user:user /home/user

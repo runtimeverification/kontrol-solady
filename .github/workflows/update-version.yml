@@ -1,0 +1,33 @@
+name: 'Update Version'
+on:
+  push:
+    branches:
+      - '_update-deps/runtimeverification/kontrol'
+# Stop in progress workflows on the same branch and same workflow to use latest committed code
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  set-image-version:
+    runs-on: [self-hosted, linux, flyweight]
+    steps:
+      - uses: actions/checkout@v3
+        with:  
+          token: ${{ secrets.JENKINS_DEVOPS_TOKEN }}
+      - name: Set image version
+        run: |
+          # Search replace previous version in .github/workflows/test-pr.yml with new version in deps/kontrol_release
+          version=$(cat deps/kontrol_release)
+          sed -i "s/kontrol:ubuntu-jammy-.*$/kontrol:ubuntu-jammy-${version}/g" .github/workflows/test-pr.yml
+          git config --global user.name "DevOps"
+          git config --global user.email "devops@runtimeverification.com"
+          if [[ -z $(git status -s) ]]; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          else
+            git add .
+            git commit -m "Update kontrol image version to ${version}"
+            git push origin HEAD:${{ github.ref }}
+          fi
