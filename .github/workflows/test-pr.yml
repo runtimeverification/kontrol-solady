@@ -1,5 +1,5 @@
 ---
-name: 'Update Version'
+name: 'Test PR'
 on:
   pull_request:
     branches:
@@ -11,52 +11,43 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  set-image-version:
-    name: 'Set Image Version'
-    runs-on: [self-hosted, linux, flyweight]
-    outputs:
-      image-version: ${{ steps.image-version.outputs.kontrol_version }}
-    steps:
-      - name: 'Check out code'
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: 'Set Image Version'
-        id: image-version
-        run: |
-          kontrol_version=$(cat deps/kontrol_release)
-          echo "kontrol_version=${kontrol_version}" >> $GITHUB_ENV
-
   new-version-test:
-    name: 'Test Tool Update'
+    name: 'Test Proofs'
     runs-on: [self-hosted, linux, normal]
-    needs: [set-image-version]
-    container:
-      image: runtimeverificationinc/kontrol:ubuntu-jammy-${{ needs.set-image-version.outputs.image-version }}
     steps:
       - name: 'Check out code'
         uses: actions/checkout@v3
         with:
+          token: ${{ secrets.JENKINS_GITHUB_PAT }}
           fetch-depth: 0
       
-      - name: 'Configure GitHub user'
+      - name: 'Get Kontrol Version'
         run: |
-          git config user.name devops
-          git config user.email devops@runtimeverification.com
+          set -euo pipefail
+          # Get the version of the tool from the Dockerfile
+          echo "kontrol-version=$(cat deps/kontrol_release)" >> $GITHUB_ENV
+          # Get Repository Base name
+          echo "repository_basename=$(basename ${{ github.repository }})" >> $GITHUB_ENV
+
+      - name: "Start Docker Container"
+        uses: ./.github/actions/with-docker
+        with:
+          container-name: '${{ env.repository_basename }}-ci'
+          container-version: '${{ env.kontrol-version }}'
 
       - name: 'Test New Tool Versions'
         run: |
-          set -euo pipefail
-          new-version=$(cat deps/kontrol_release)
-          kup install --version ${new-version}
-          # If all scripts in test.sh pass then the test is successful, else fail 
-          # and print the name of the script that failed
-          for script in ./tests/*.sh; do
-              if ! bash "$script"; then
-                  echo "Test failed: $script"
-                  exit 1
-              else
-                  echo "Test passed: $script"
-              fi
-          done
+          # Run the following in the running docker container
+          docker exec -u user ${{ env.repository_basename }}-ci bash -c ' 
+            set -euo pipefail
+            # If all scripts in test.sh pass then the test is successful, else fail 
+            # and print the name of the script that failed
+            for script in ./test/*.sh; do
+                if ! bash "$script"; then
+                    echo "Test failed: $script"
+                    exit 1
+                else
+                    echo "Test passed: $script"
+                fi
+            done
+          '
