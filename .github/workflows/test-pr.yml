@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   new-version-test:
-    name: 'Test Tool Update'
+    name: 'Test Proofs'
     runs-on: [self-hosted, linux, normal]
     steps:
       - name: 'Check out code'
