@@ -49,12 +49,5 @@ jobs:
             set -euo pipefail
             # If all scripts in test.sh pass then the test is successful, else fail 
             # and print the name of the script that failed
-            for script in ./tests/*.sh; do
-                if ! bash "$script"; then
-                    echo "Test failed: $script"
-                    exit 1
-                else
-                    echo "Test passed: $script"
-                fi
-            done
+            ./test/run-kevm.sh
           '
