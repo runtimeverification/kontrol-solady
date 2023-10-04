@@ -26,8 +26,8 @@ runs:
         --detach                          \
         --user root                       \
         --workdir /home/user/workspace            \
-        runtimeverificationinc/kontrol:ubuntu-jammy-${CONTAINER_VERSION}
+        ghcr.io/runtimeverification/devops/kontrol-kup:0.1.15
 
       # Copy the current Checkout direcotry into the container
-      docker cp . ${CONTAINER_NAME}:/home/user/workspace
-      docker exec ${CONTAINER_NAME} chown -R user:user /home/user
+      docker cp . ${CONTAINER_NAME}:/home/ubuntu/workspace
+      docker exec ${CONTAINER_NAME} chown -R ubuntu:ubuntu /home/user
