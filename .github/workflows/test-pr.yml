@@ -45,9 +45,4 @@ jobs:
       - name: 'Test New Tool Versions'
         run: |
           # Run the following in the running docker container
-          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c ' 
-            set -euo pipefail
-            # If all scripts in test.sh pass then the test is successful, else fail 
-            # and print the name of the script that failed
-            ls -l 
-          '
+          docker exec -it -u ubuntu ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
