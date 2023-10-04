@@ -35,7 +35,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: "Start Docker Container"
         uses: ./.github/actions/with-docker
         with:
@@ -45,7 +45,7 @@ jobs:
       - name: 'Test New Tool Versions'
         run: |
           # Run the following in the running docker container
-          docker exec -u user ${{ env.repository_basename }}-ci bash -c ' 
+          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c ' 
             set -euo pipefail
             # If all scripts in test.sh pass then the test is successful, else fail 
             # and print the name of the script that failed
