@@ -25,7 +25,7 @@ runs:
         --tty                             \
         --detach                          \
         --user root                       \
-        --workdir /home/user/workspace            \
+        --workdir /home/ubuntu/workspace            \
         ghcr.io/runtimeverification/devops/kontrol-kup:0.1.15
 
       # Copy the current Checkout direcotry into the container
