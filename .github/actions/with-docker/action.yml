@@ -30,4 +30,4 @@ runs:
 
       # Copy the current Checkout direcotry into the container
       docker cp . ${CONTAINER_NAME}:/home/ubuntu/workspace
-      docker exec ${CONTAINER_NAME} chown -R ubuntu:ubuntu /home/user
+      docker exec ${CONTAINER_NAME} chown -R ubuntu:ubuntu /home/ubuntu

@@ -45,5 +45,5 @@ jobs:
       - name: 'Test New Tool Versions'
         run: |
           # Run the following in the running docker container
-          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c 'ls -l /home/ubuntu'
+          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c 'ls -l /home/ubuntu/workspace'
           docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
