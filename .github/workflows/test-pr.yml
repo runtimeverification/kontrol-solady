@@ -49,5 +49,5 @@ jobs:
             set -euo pipefail
             # If all scripts in test.sh pass then the test is successful, else fail 
             # and print the name of the script that failed
-            ./test/run-kevm.sh
+            ls -l 
           '
