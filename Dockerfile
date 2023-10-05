@@ -12,3 +12,5 @@ RUN /home/ubuntu/.foundry/bin/foundryup
 ARG KONTROL_RELEASE=v0.1.15
 RUN kup install kontrol --version $KONTROL_RELEASE 
 RUN nix-store --gc 
+
+ENV PATH="/home/ubuntu/.foundry/bin:${PATH}"
