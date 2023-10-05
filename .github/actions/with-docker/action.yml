@@ -17,6 +17,8 @@ runs:
       
       CONTAINER_NAME=${{inputs.container-name}}
       CONTAINER_VERSION=${{inputs.container-version}}
+      
+      docker build --tag kontrol-kup-ci .
 
       docker run                          \
         --name ${CONTAINER_NAME}          \
@@ -24,10 +26,12 @@ runs:
         --interactive                     \
         --tty                             \
         --detach                          \
-        --user root                       \
+        --user ubuntu                     \
+        --mount nixstore-kup:/nix/store   \
         --workdir /home/ubuntu/workspace            \
-        ghcr.io/runtimeverification/devops/kontrol-kup:0.1.15
+        kontrol-kup-ci
 
       # Copy the current Checkout direcotry into the container
       docker cp . ${CONTAINER_NAME}:/home/ubuntu/workspace
       docker exec ${CONTAINER_NAME} chown -R ubuntu:ubuntu /home/ubuntu
+      docker exec ${CONTAINER_NAME} chown -R ubuntu:ubuntu /nix/store

@@ -47,3 +47,8 @@ jobs:
           # Run the following in the running docker container
           docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c 'export PATH=/home/ubuntu/.foundry/bin:$PATH && which forge'
           docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
+
+      - name: 'Stop Docker Container'
+        if: always()
+        run: |
+          docker stop --time=0 ${{ env.repository_basename }}-ci
