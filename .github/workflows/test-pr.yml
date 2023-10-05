@@ -45,5 +45,5 @@ jobs:
       - name: 'Test New Tool Versions'
         run: |
           # Run the following in the running docker container
-          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c 'which nix && which kup && kup list'
+          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c 'which nix && which kup && kup list && source ~/.bashrc && which forge'
           docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
