@@ -20,15 +20,15 @@ runs:
       
       docker build --tag kontrol-kup-ci .
 
-      docker run                          \
-        --name ${CONTAINER_NAME}          \
-        --rm                              \
-        --interactive                     \
-        --tty                             \
-        --detach                          \
-        --user ubuntu                     \
-        --mount nixstore-kup:/nix/store   \
-        --workdir /home/ubuntu/workspace            \
+      docker run                                                    \
+        --name ${CONTAINER_NAME}                                    \
+        --rm                                                        \
+        --interactive                                               \
+        --tty                                                       \
+        --detach                                                    \
+        --user ubuntu                                               \
+        --mount type=volume,source=nixstore-kup,dst=/nix/store:rw   \
+        --workdir /home/ubuntu/workspace                            \
         kontrol-kup-ci
 
       # Copy the current Checkout direcotry into the container
