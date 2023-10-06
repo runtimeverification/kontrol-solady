@@ -23,7 +23,7 @@ runs:
         --detach                                                    \
         --user root                                                 \
         --workdir /home/user/workspace                            \
-        kontrol-kup-ci
+        runtimeverificationinc/kontrol:ubuntu-jammy-${CONTAINER_VERSION}
 
       # Copy the current Checkout direcotry into the container
       docker cp . ${CONTAINER_NAME}:/home/user/workspace
