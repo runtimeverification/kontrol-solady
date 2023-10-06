@@ -15,7 +15,7 @@ runs:
       CONTAINER_NAME=${{inputs.container-name}}
       CONTAINER_VERSION=$(cat deps/kontrol_release)
       KONTROL_VERSION=$(cat deps/kontrol_release)
-      docker build . --tag solady-ci --build-arg ${KONTROL_VERSION}
+      docker build . --tag solady-ci --build-arg KONTROL_VERSION=${KONTROL_VERSION}
 
       docker run                                                    \
         --name ${CONTAINER_NAME}                                    \
