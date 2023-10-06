@@ -1,16 +1,13 @@
-FROM ghcr.io/runtimeverification/devops/kup:643101c
+ARG KONTROL_RELEASE
+FROM runtimeverificationinc/kontrol:ubuntu-jammy-${KONTROL_RELEASE}
 
 USER root
 RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-USER ubuntu 
+USER user 
 RUN curl -L https://foundry.paradigm.xyz | bash
-RUN /home/ubuntu/.foundry/bin/foundryup
+RUN /home/user/.foundry/bin/foundryup
 
-ARG KONTROL_RELEASE=v0.1.15
-RUN kup install kontrol --version v$KONTROL_RELEASE 
-RUN nix-store --gc 
-
-ENV PATH="/home/ubuntu/.foundry/bin:${PATH}"
+ENV PATH="/home/user/.foundry/bin:${PATH}"

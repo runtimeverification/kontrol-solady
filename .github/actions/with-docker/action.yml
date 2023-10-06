@@ -15,6 +15,8 @@ runs:
       CONTAINER_NAME=${{inputs.container-name}}
       CONTAINER_VERSION=$(cat deps/kontrol_release)
       
+      docker build . --name solady-ci --build-arg KONTROL_VERSION=$(cat deps/kontrol_release)
+
       docker run                                                    \
         --name ${CONTAINER_NAME}                                    \
         --rm                                                        \
@@ -23,7 +25,7 @@ runs:
         --detach                                                    \
         --user root                                                 \
         --workdir /home/user/workspace                            \
-        runtimeverificationinc/kontrol:ubuntu-jammy-${CONTAINER_VERSION}
+        solady-ci
 
       # Copy the current Checkout direcotry into the container
       docker cp . ${CONTAINER_NAME}:/home/user/workspace
