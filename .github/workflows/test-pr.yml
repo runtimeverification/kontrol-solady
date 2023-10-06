@@ -43,7 +43,7 @@ jobs:
       - name: 'Test New Tool Versions'
         run: |
           # Run the following in the running docker container
-          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
+          docker exec -u user ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
 
       - name: 'Stop Docker Container'
         if: always()
