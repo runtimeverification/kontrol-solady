@@ -32,7 +32,6 @@ jobs:
       - name: Docker Login w/ Github Token
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
           username: rvdockerhub
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
