@@ -40,7 +40,6 @@ jobs:
         uses: ./.github/actions/with-docker
         with:
           container-name: '${{ env.repository_basename }}-ci'
-          container-version: '${{ env.kontrol-version }}'
 
       - name: 'Test New Tool Versions'
         run: |

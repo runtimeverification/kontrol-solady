@@ -1,9 +1,6 @@
 name: 'With Docker'
 description: 'Run a given stage with Docker Image'
 inputs:
-  container-version:
-    description: 'Docker Image Version'
-    required: true
   container-name:
     description: 'Docker Container Name'
     required: true
@@ -16,10 +13,8 @@ runs:
       set -euxo pipefail
       
       CONTAINER_NAME=${{inputs.container-name}}
-      CONTAINER_VERSION=${{inputs.container-version}}
+      CONTAINER_VERSION=$(cat deps/kontrol_release)
       
-      docker build --tag kontrol-kup-ci --build-arg=KONTROL_RELEASE=$(cat deps/kontrol_release)  .
-
       docker run                                                    \
         --name ${CONTAINER_NAME}                                    \
         --rm                                                        \
@@ -27,10 +22,9 @@ runs:
         --tty                                                       \
         --detach                                                    \
         --user root                                                 \
-        --mount type=volume,source=nixstore-kup,dst=/nix/store:rw   \
-        --workdir /home/ubuntu/workspace                            \
+        --workdir /home/user/workspace                            \
         kontrol-kup-ci
 
       # Copy the current Checkout direcotry into the container
-      docker cp . ${CONTAINER_NAME}:/home/ubuntu/workspace
-      docker exec ${CONTAINER_NAME} chown -R ubuntu:ubuntu /home/ubuntu
+      docker cp . ${CONTAINER_NAME}:/home/user/workspace
+      docker exec ${CONTAINER_NAME} chown -R user:user /home/user
