@@ -11,11 +11,6 @@ contract FixedPointMathLibVerification is Test, KevmUtil {
     // Constants
     uint256 constant WAD = 1e18;
 
-    function setUp() public {
-        // Make KEVM abstract gas computations
-        kevm.infiniteGas();
-    }
-
     function testMulWad(uint256 x, uint256 y) public {
 
         if(y == 0 || x <= type(uint256).max / y) {

@@ -11,9 +11,7 @@ kontrol_kompile() {
             --verbose                 \
             --require ${lemmas}       \
             --module-import ${module} \
-            ${rekompile}              \
-            ${regen}                  \
-            ${llvm_library}
+            ${rekompile}
 }
 
 kontrol_prove() {
@@ -30,7 +28,6 @@ kontrol_prove() {
             ${implication_every_block}         \
             ${break_every_step}                \
             ${break_on_calls}                  \
-            ${auto_abstract}                   \
             ${tests}                           \
             ${use_booster}
 }
@@ -57,10 +54,6 @@ smt_timeout=100000
 workers=12
 
 # Switch the options below to turn them on or off
-# TODO: Describe this thoroughly
-regen=--regen
-#regen=
-
 rekompile=--rekompile
 #rekompile=
 
@@ -84,23 +77,12 @@ break_every_step=
 break_on_calls=
 break_on_calls=--no-break-on-calls
 
-auto_abstract=--auto-abstract
-auto_abstract=
-auto_abstract=--auto-abstract-gas
-
 bug_report=--bug-report
 bug_report=
 
 # For running the booster
-llvm_library=
-llvm_library=--with-llvm-library
-
-# For running the booster
-use_booster=
 use_booster=--use-booster
-
-kore_rpc_command=
-kore_rpc_command=kore-rpc-booster\ --simplify-after-exec\ --llvm-backend-library\ out/kompiled/llvm-library/interpreter.so
+#use_booster=
 
 # List of tests to symbolically execute
 
