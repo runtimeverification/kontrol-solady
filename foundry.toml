@@ -4,5 +4,6 @@ out = 'out'
 libs = ['lib']
 test = 'test/'
 cache_path  = 'forge-cache'
+solc-version = "0.8.16"
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
