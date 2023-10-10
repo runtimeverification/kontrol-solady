@@ -3,10 +3,9 @@ pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
 import "solady/src/utils/FixedPointMathLib.sol";
+import "kontrol-cheatcodes/KontrolCheats.sol";
 
-import "./KevmUtil.sol";
-
-contract FixedPointMathLibVerification is Test, KevmUtil {
+contract FixedPointMathLibVerification is Test, KontrolCheats {
 
     // Constants
     uint256 constant WAD = 1e18;
