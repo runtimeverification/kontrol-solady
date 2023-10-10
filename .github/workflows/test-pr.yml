@@ -29,25 +29,23 @@ jobs:
           # Get Repository Base name
           echo "repository_basename=$(basename ${{ github.repository }})" >> $GITHUB_ENV
 
+      - name: Docker Login w/ Github Token
+        uses: docker/login-action@v1
+        with:
+          username: rvdockerhub
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: "Start Docker Container"
         uses: ./.github/actions/with-docker
         with:
           container-name: '${{ env.repository_basename }}-ci'
-          container-version: '${{ env.kontrol-version }}'
 
       - name: 'Test New Tool Versions'
         run: |
           # Run the following in the running docker container
-          docker exec -u user ${{ env.repository_basename }}-ci bash -c ' 
-            set -euo pipefail
-            # If all scripts in test.sh pass then the test is successful, else fail 
-            # and print the name of the script that failed
-            for script in ./test/*.sh; do
-                if ! bash "$script"; then
-                    echo "Test failed: $script"
-                    exit 1
-                else
-                    echo "Test passed: $script"
-                fi
-            done
-          '
+          docker exec -u user ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
+
+      - name: 'Stop Docker Container'
+        if: always()
+        run: |
+          docker stop --time=0 ${{ env.repository_basename }}-ci

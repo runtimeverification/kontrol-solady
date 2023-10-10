@@ -10,9 +10,11 @@ We employ two different types of specification for function verification: functi
 
 ### Verified functions
 
-| Name             | Location           | Equivalence           | Property           |
-|------------------|--------------------|-----------------------|--------------------|
-| FooName : string | FooLocation : path | FooEquivalence : Bool | FooProperty : Bool |
+| Name       | Location                                                                                                                 | Equivalence | Property |
+|------------|--------------------------------------------------------------------------------------------------------------------------|-------------|----------|
+| `wadMul`   | [solady/src/utils/FixedPointMathLib.sol](https://github.com/Vectorized/solady/blob/main/src/utils/FixedPointMathLib.sol) | No          | Yes      |
+| `wadMulUp` | [solady/src/utils/FixedPointMathLib.sol](https://github.com/Vectorized/solady/blob/main/src/utils/FixedPointMathLib.sol) | No          | Yes      |
+
 
 ## Repository Structure
 
