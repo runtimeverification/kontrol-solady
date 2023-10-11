@@ -11,9 +11,7 @@ kontrol_kompile() {
             --verbose                 \
             --require ${lemmas}       \
             --module-import ${module} \
-            ${rekompile}              \
-            ${regen}                  \
-            ${llvm_library}
+            ${rekompile}
 }
 
 kontrol_prove() {
@@ -30,7 +28,6 @@ kontrol_prove() {
             ${implication_every_block}         \
             ${break_every_step}                \
             ${break_on_calls}                  \
-            ${auto_abstract}                   \
             ${tests}                           \
             ${use_booster}
 }
@@ -41,7 +38,9 @@ kontrol_claim() {
         --claim ${base_module}-SPEC.${claim} \
         --definition out/kompiled            \
         --spec-module ${base_module}-SPEC    \
-        --smt-timeout ${smt_timeout}
+        --smt-timeout ${smt_timeout}         \
+        ${use_booster}
+
 }
 
 lemmas=test/solady-lemmas.k
@@ -50,17 +49,13 @@ module=FixedPointMathLibVerification:${base_module}
 
 max_depth=10000
 max_iterations=10000
-smt_timeout=100000
+smt_timeout=1000
 
 # Number of processes run by the prover in parallel
 # Should be at most (M - 8) / 8 in a machine with M GB of RAM
 workers=12
 
 # Switch the options below to turn them on or off
-# TODO: Describe this thoroughly
-regen=--regen
-#regen=
-
 rekompile=--rekompile
 #rekompile=
 
@@ -84,36 +79,26 @@ break_every_step=
 break_on_calls=
 break_on_calls=--no-break-on-calls
 
-auto_abstract=--auto-abstract
-auto_abstract=
-auto_abstract=--auto-abstract-gas
-
 bug_report=--bug-report
 bug_report=
 
 # For running the booster
-llvm_library=
-llvm_library=--with-llvm-library
-
-# For running the booster
-use_booster=
 use_booster=--use-booster
-
-kore_rpc_command=
-kore_rpc_command=kore-rpc-booster\ --simplify-after-exec\ --llvm-backend-library\ out/kompiled/llvm-library/interpreter.so
+#use_booster=
 
 # List of tests to symbolically execute
 
 tests=""
-tests+="--test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
-tests+="--test FixedPointMathLibVerification.testMulWadUp "
+#tests+="--test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
+#tests+="--test FixedPointMathLibVerification.testMulWadUp "
+tests+="--test FixedPointMathLibVerification.testMyLog2 "
 
 # Name of the claim to execute
-claim=mulWadUp-first-roadblock
+claim=log2-05
 
 # Comment these lines as needed
 pkill kore-rpc || true
 forge_build
 kontrol_kompile
-kontrol_prove
-#kontrol_claim
+#kontrol_prove
+kontrol_claim
