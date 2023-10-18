@@ -11,7 +11,8 @@ kontrol_kompile() {
             --verbose                 \
             --require ${lemmas}       \
             --module-import ${module} \
-            ${rekompile}
+            ${rekompile}              \
+            ${regen}
 }
 
 kontrol_prove() {
@@ -47,7 +48,7 @@ lemmas=test/solady-lemmas.k
 base_module=SOLADY-LEMMAS
 module=FixedPointMathLibVerification:${base_module}
 
-max_depth=10000
+max_depth=10
 max_iterations=10000
 smt_timeout=1000
 
@@ -57,7 +58,10 @@ workers=12
 
 # Switch the options below to turn them on or off
 rekompile=--rekompile
-#rekompile=
+rekompile=
+
+regen=--regen
+regen=
 
 # Progress is saved automatically so an unfinished proof can be resumed from where it left off
 # Turn on to restart proof from the beginning instead of resuming
@@ -84,7 +88,7 @@ bug_report=
 
 # For running the booster
 use_booster=--use-booster
-#use_booster=
+use_booster=
 
 # List of tests to symbolically execute
 
@@ -94,11 +98,11 @@ tests=""
 tests+="--test FixedPointMathLibVerification.testMyLog2 "
 
 # Name of the claim to execute
-claim=log2-05
+claim=log2-06
 
 # Comment these lines as needed
 pkill kore-rpc || true
 forge_build
 kontrol_kompile
-#kontrol_prove
-kontrol_claim
+kontrol_prove
+#kontrol_claim

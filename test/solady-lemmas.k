@@ -29,23 +29,38 @@ module SOLADY-LEMMAS
     
     rule chop ( bool2Word ( X ) <<Int Y ) => bool2Word ( X ) <<Int Y requires Y <Int 256 [simplification]
 
-    //rule { 0 #Equals bool2Word ( X ) <<Int Y } => { false #Equals X }
-    //    requires 0 <=Int Y
-    //    [concrete(Y), simplification]
+    rule chop ( 1 <<Int Y ) => 1 <<Int Y requires Y <Int 256 [simplification]
 
-    //rule { 0 #Equals ( bool2Word ( Z ) <<Int W |Int bool2Word ( X ) <<Int Y ) } => { false #Equals ( Z orBool X ) }
-    //    requires 0 <=Int Y
-    //    andBool 0 <=Int W
-    //    [concrete(W,Y), simplification]
+    rule { 0 #Equals bool2Word ( X ) <<Int Y } => { false #Equals X }
+        requires 0 <=Int Y
+        [concrete(Y), simplification]
+
+    rule { 0 #Equals ( bool2Word ( Z ) <<Int W |Int bool2Word ( X ) <<Int Y ) } => { false #Equals Z } #And { false #Equals X }
+        requires 0 <=Int Y
+         andBool 0 <=Int W
+        [concrete(W,Y), simplification]
+
+    //rule 1 <<Int ( _ |Int bool2Word ( _ ) <<Int Y ) <=Int X => true ensures 1 <<Int (1 <<Int Y) <=Int X [simplification, concrete(Y)]
+
+    //rule 1 <<Int ( _ |Int bool2Word ( _ ) <<Int Y ) <=Int X => false ensures 1 <<Int (1 <<Int Y) >Int X [simplification, concrete(Y)]
+
+
+
+
+    //rule X <Int (bool2Word ( _ ) <<Int A |Int bool2Word ( W ) <<Int B) => false
+    //    requires (2 ^Int A +Int 2 ^Int B) <Int X
+    //    [simplification, concrete(X,A,B)]
     
-    rule A <Int bool2Word ( _ ) <<Int B => false
-        requires A >=Int 2 ^Int B andBool B <Int 256 [simplification, concrete( A , B )]
-    rule A <Int bool2Word ( X ) <<Int B => X
-        requires A <Int 2 ^Int B andBool B <Int 256 [simplification, concrete( A , B )]
+    //rule A <Int bool2Word ( _ ) <<Int B => false
+    //    requires A >=Int 2 ^Int B andBool B <Int 256 [simplification, concrete( A , B )]
+    //rule A <Int bool2Word ( X ) <<Int B => X
+    //    requires A <Int 2 ^Int B andBool B <Int 256 [simplification, concrete( A , B )]
     
     //
     // ML
     //
+
+    //rule #Not ( ( { false #Equals X:Bool } #And { false #Equals Y:Bool } ) ) => {true #Equals X } #Or { true #Equals Y } [simplification]
 
     rule #Not ( { false #Equals X:Bool andBool Y:Bool } ) => {true #Equals X } #And { true #Equals Y } [simplification]
     
@@ -74,5 +89,10 @@ module SOLADY-LEMMAS-SPEC
     //claim [log2-04]: <k> runLemma(bool2Word ( X:Bool ) <<Int 7) => doneLemma(128) ...  </k>
     //  requires X:Bool
 
-    claim [log2-05]: <k>  maxUInt8 <Int chop ( bool2Word ( maxUInt128 <Int _ ) <<Int 7 ) => doneLemma(false) ... </k>
+    //claim [log2-05]: <k> runLemma( maxUInt8 <Int chop ( bool2Word ( _ ) <<Int 7) ) => doneLemma(false) ... </k>
+
+    //claim [log2-06]: <k> runLemma (maxUInt8 <Int ( bool2Word ( maxUInt64 <Int X:Int >>Int bool2Word ( maxUInt128 <Int X:Int ) <<Int 7 ) <<Int 6 |Int bool2Word ( maxUInt128 <Int X:Int ) <<Int 7 ) ) => doneLemma(false) ... </k>
+
+    claim [log2-07]: <k> runLemma (1 <<Int ( bool2Word ( maxUInt64 <Int X:Int >>Int bool2Word ( maxUInt128 <Int X:Int ) <<Int 7 ) <<Int 6 |Int bool2Word ( maxUInt128 <Int X:Int ) <<Int 7 ) <=Int X:Int) => doneLemma(maxUInt128 <Int X:Int) ... </k>
+
 endmodule
