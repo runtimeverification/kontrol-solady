@@ -30,6 +30,19 @@ contract FixedPointMathLibVerification is Test, KevmUtil {
     //}
 
     function testLog2(uint256 x) public {
+
+        unchecked {
+          uint256 y = x;
+          if (2 ** 128 - 1 < y) { y = y >> 128; }
+          if (2 **  64 - 1 < y) { y = y >>  64; }
+          if (2 **  32 - 1 < y) { y = y >>  32; }
+          if (2 **  16 - 1 < y) { y = y >>  16; }
+          if (2 **   8 - 1 < y) { y = y >>   8; }
+          if (2 **   4 - 1 < y) { y = y >>   4; }
+          if (2 **   2 - 1 < y) { y = y >>   2; }
+          if (2 **   1 - 1 < y) { y = y >>   1; }
+        }
+
         uint256 r = FixedPointMathLib.log2(x);
         if(x > 0){
             assertLe(2**r, x);
