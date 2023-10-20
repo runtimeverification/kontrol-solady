@@ -32,24 +32,27 @@ contract FixedPointMathLibVerification is Test, KevmUtil {
     function testLog2(uint256 x) public {
 
         unchecked {
-          uint256 y = x;
-          if (2 ** 128 - 1 < y) { return; } else { }
-          if (2 **  64 - 1 < y) { return; } else { }
-          if (2 **  32 - 1 < y) { return; } else { }
-          if (2 **  16 - 1 < y) { return; } else { }
-          if (2 **   8 - 1 < y) { return; } else { }
-          if (2 **   4 - 1 < y) { y = y >>   4; } else { return; }
-          if (2 **   2 - 1 < y) { y = y >>   2; } else { }
+          uint256 y = x; uint256 z = 0;
+          if (2 ** 128 - 1 < y) { y = y >> 128; } else { }
+          if (2 **  64 - 1 < y) { y = y >>  64; } else { }
+          if (2 **  32 - 1 < y) { y = y >>  32; } else { }
+          if (2 **  16 - 1 < y) { y = y >>  16; } else { }
+          if (2 **   8 - 1 < y) { y = y >>   8; } else { }
+          if (2 **   4 - 1 < y) { y = y >>   4; } else { }
+          if (2 **   3 - 1 < y) { y = y >>   1; } else { }
+          if (2 **   2 - 1 < y) { y = y >>   1; } else { }
           if (2 **   1 - 1 < y) { y = y >>   1; } else { }
         }
 
         uint256 r = FixedPointMathLib.log2(x);
 
         if(x > 0){
-            if (r < 255)
-               return;
-            else
-               assertEq(r, 255);
+            assertLe(2**r, x);
+            if (r < 255) {
+              assertLt(x, 2**(r+1));
+            } else {
+              assertEq(r, 255);
+            }
         }
         else
             assertEq(r,0);
