@@ -52,11 +52,13 @@ module SOLADY-LEMMAS
       requires 0 <=Int A andBool 0 <=Int B
       [simplification]
 
-    rule A >>Int B  <Int C => A  <Int ( C <<Int B ) +Int ( 2 ^Int B ) -Int 1 [simplification, concrete(B, C)]
-    rule A >>Int B <=Int C => A <=Int ( C <<Int B ) +Int ( 2 ^Int B ) -Int 1 [simplification, concrete(B, C)]
+    rule A >>Int B <=Int C => A <=Int ( C <<Int B ) +Int ( 2 ^Int B ) -Int 1
+      requires C +Int 1 ==Int 2 ^Int ( log2Int ( C +Int 1 ) )
+      [simplification, concrete(B, C)]
 
-    rule C  <Int A >>Int B => C <<Int B  <Int A [simplification, concrete(B, C)]
-    rule C <=Int A >>Int B => C <<Int B <=Int A [simplification, concrete(B, C)]
+    rule C <Int A >>Int B => ( C <<Int B ) +Int ( 2 ^Int B ) -Int 1 <Int A
+    requires C +Int 1 ==Int 2 ^Int ( log2Int ( C +Int 1 ) )
+      [simplification, concrete(B, C)]
 
     rule X xorInt maxUInt256 => maxUInt256 -Int X
       requires #rangeUInt ( 256 , X )
@@ -112,7 +114,6 @@ module SOLADY-LEMMAS
     syntax Int ::= "cachedBytesConstant" [alias]
     rule cachedBytesConstant => 6928917744019834342450304135053993530982274426945361611473370484834304
 
-    // Direct resolution
     rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 => 0
       requires 0 <=Int Y andBool Y <Int 32
        andBool ( Y <=Int 1 orBool Y >=Int 16 )
@@ -133,67 +134,32 @@ module SOLADY-LEMMAS
        andBool 7 <Int Y andBool Y <=Int 15
       [simplification]
 
-    // Conditional resolution
-    rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 ==Int 0 => Y <=Int 1 orBool Y >=Int 16
-      requires 0 <=Int Y andBool Y <Int 32
-      [simplification]
+    rule byte ( X:Int >>Int Y:Int , cachedBytesConstant ) => 3
+         requires 0 <=Int X andBool 0 <=Int Y
+          andBool X <=Int ( 2 ^Int ( Y +Int 4 ) -Int 1 )
+          andBool 7 <Int X >>Int Y
+          [simplification, concrete(Y)]
 
-    rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 ==Int 1 => 1 <Int Y andBool Y <=Int 3
-      requires 0 <=Int Y andBool Y <Int 32
-      [simplification]
+    rule byte ( X:Int >>Int Y:Int , cachedBytesConstant ) => 2
+         requires 0 <=Int X andBool 0 <=Int Y
+          andBool X <=Int ( 2 ^Int ( Y +Int 4 ) -Int 1 )
+          andBool notBool 7 <Int X >>Int Y
+          andBool 3 <Int X >>Int Y
+          [simplification, concrete(Y)]
 
-    rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 ==Int 2 => 3 <Int Y andBool Y <=Int 7
-      requires 0 <=Int Y andBool Y <Int 32
-      [simplification]
+    rule byte ( X:Int >>Int Y:Int , cachedBytesConstant ) => 1
+         requires 0 <=Int X andBool 0 <=Int Y
+          andBool X <=Int ( 2 ^Int ( Y +Int 4 ) -Int 1 )
+          andBool notBool 3 <Int X >>Int Y
+          andBool 1 <Int X >>Int Y
+          [simplification, concrete(Y)]
 
-    rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 ==Int 3 => 7 <Int Y andBool Y <=Int 15
-      requires 0 <=Int Y andBool Y <Int 32
-      [simplification]
-
-    // Comparison with maxUInt8
-    rule maxUInt8 <Int X |Int ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) => false
-      requires 0 <=Int X andBool X <Int 256
-       andBool 0 <=Int Y
-       andBool Y >>Int X <Int 32
-      [simplification, concrete(X)]
-
-    rule X |Int ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) <=Int maxUInt8 => true
-      requires 0 <=Int X andBool X <Int 256
-       andBool 0 <=Int Y
-       andBool Y >>Int X <Int 32
-      [simplification, concrete(X)]
-
-    rule maxUInt8 <=Int X |Int ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) => false
-      requires 0 <=Int X andBool X <Int 252
-       andBool 0 <=Int Y
-       andBool Y >>Int X <Int 32
-      [simplification, concrete(X)]
-
-    rule X |Int ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) <Int maxUInt8 => true
-      requires 0 <=Int X andBool X <Int 252
-       andBool 0 <=Int Y
-       andBool Y >>Int X <Int 32
-      [simplification, concrete(X)]
-
-    rule maxUInt8 <=Int X |Int ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) => true
-      requires 0 <=Int Y
-       andBool Y >>Int X <Int 32
-       andBool (   X ==Int 255
-          orBool ( X ==Int 254 andBool ( ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 1 orBool ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 3 ) )
-          orBool ( X ==Int 253 andBool ( ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 2 orBool ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 3 ) )
-          orBool ( X ==Int 252 andBool ( ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 3 ) )
-        )
-      [simplification, concrete(X)]
-
-    rule X |Int ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) <Int maxUInt8 => false
-      requires 0 <=Int Y
-       andBool Y >>Int X <Int 32
-       andBool (   X ==Int 255
-          orBool ( X ==Int 254 andBool ( ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 1 orBool ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 3 ) )
-          orBool ( X ==Int 253 andBool ( ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 2 orBool ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 3 ) )
-          orBool ( X ==Int 252 andBool ( ( ( cachedBytesConstant >>Int ( ( maxUInt5 -Int ( Y >>Int X ) ) *Int 8 ) ) modInt 256 ) ==Int 3 ) )
-        )
-      [simplification, concrete(X)]
+    rule byte ( X:Int >>Int Y:Int , cachedBytesConstant ) => 0
+         requires 0 <=Int X andBool 0 <=Int Y
+          andBool X <=Int ( 2 ^Int ( Y +Int 4 ) -Int 1 )
+          andBool notBool 1 <Int X >>Int Y
+          andBool 0 <Int X >>Int Y
+          [simplification, concrete(Y)]
 
 endmodule
 
@@ -229,5 +195,11 @@ module SOLADY-LEMMAS-SPEC
       </k>
       requires 0 <=Int VV0_x_114b9705:Int
        andBool VV0_x_114b9705:Int >>Int 4 <=Int 1
+
+    claim [arith-02]:
+      <k>
+        runLemma ( maxUInt64 <Int VV0_x_114b9705:Int >>Int 128 ) => doneLemma ( false )
+      </k>
+      requires VV0_x_114b9705 <=Int maxUInt192
 
 endmodule
