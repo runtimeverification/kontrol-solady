@@ -11,7 +11,8 @@ kontrol_kompile() {
             --verbose                 \
             --require ${lemmas}       \
             --module-import ${module} \
-            ${rekompile}
+            ${rekompile}              \
+            ${regen}
 }
 
 kontrol_prove() {
@@ -38,16 +39,17 @@ kontrol_claim() {
         --claim ${base_module}-SPEC.${claim} \
         --definition out/kompiled            \
         --spec-module ${base_module}-SPEC    \
-        --smt-timeout ${smt_timeout}
+        --smt-timeout ${smt_timeout}         \
+        ${use_booster}
 }
 
 lemmas=test/solady-lemmas.k
 base_module=SOLADY-LEMMAS
 module=FixedPointMathLibVerification:${base_module}
 
-max_depth=10000
+max_depth=100
 max_iterations=10000
-smt_timeout=100000
+smt_timeout=1000
 
 # Number of processes run by the prover in parallel
 # Should be at most (M - 8) / 8 in a machine with M GB of RAM
@@ -56,6 +58,9 @@ workers=12
 # Switch the options below to turn them on or off
 rekompile=--rekompile
 #rekompile=
+
+regen=--regen
+regen=
 
 # Progress is saved automatically so an unfinished proof can be resumed from where it left off
 # Turn on to restart proof from the beginning instead of resuming
@@ -87,11 +92,13 @@ use_booster=--use-booster
 # List of tests to symbolically execute
 
 tests=""
-tests+="--test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
-tests+="--test FixedPointMathLibVerification.testMulWadUp "
+#tests+="--test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
+#tests+="--test FixedPointMathLibVerification.testMulWadUp "
+#tests+="--test FixedPointMathLibVerification.testLog2 "
+tests+="--test FixedPointMathLibVerification.testMyLog2 "
 
 # Name of the claim to execute
-claim=mulWadUp-first-roadblock
+claim=log2-01
 
 # Comment these lines as needed
 pkill kore-rpc || true
