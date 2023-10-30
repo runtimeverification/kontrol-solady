@@ -13,7 +13,7 @@ concurrency:
 jobs:
   new-version-test:
     name: 'Test Proofs'
-    runs-on: [self-hosted, linux, normal]
+    runs-on: [self-hosted, linux, prover]
     steps:
       - name: 'Check out code'
         uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
         with:
           container-name: '${{ env.repository_basename }}-ci'
 
-      - name: 'Test New Tool Versions'
+      - name: 'Run Kontrol'
         run: |
           # Run the following in the running docker container
           docker exec -u user ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
