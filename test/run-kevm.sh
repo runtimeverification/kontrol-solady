@@ -55,7 +55,7 @@ workers=12
 
 # Switch the options below to turn them on or off
 rekompile=--rekompile
-#rekompile=
+rekompile=
 
 # Progress is saved automatically so an unfinished proof can be resumed from where it left off
 # Turn on to restart proof from the beginning instead of resuming
@@ -87,8 +87,8 @@ use_booster=--use-booster
 # List of tests to symbolically execute
 
 tests=""
-tests+="--test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
-tests+="--test FixedPointMathLibVerification.testMulWadUp "
+tests+="--match-test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
+tests+="--match-test FixedPointMathLibVerification.testMulWadUp "
 
 # Name of the claim to execute
 claim=mulWadUp-first-roadblock
