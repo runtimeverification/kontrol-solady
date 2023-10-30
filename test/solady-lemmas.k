@@ -19,19 +19,19 @@ module SOLADY-LEMMAS
                    | doneLemma( StepSort )
 
     rule <k> runLemma(T) => doneLemma(T) ... </k>
-    
+
     //
     // Bool
     //
 
     rule bool2Word ( X ) => 1 requires X         [simplification]
     rule bool2Word ( X ) => 0 requires notBool X [simplification]
-    
+
     rule chop ( bool2Word ( X ) <<Int Y ) => bool2Word ( X ) <<Int Y requires Y <Int 256 [simplification]
 
     rule A <Int bool2Word ( _ ) <<Int B => false
       requires A >=Int 1 <<Int B [simplification, concrete( A , B )]
-      
+
 /*
     rule A <Int bool2Word ( X ) <<Int B => X
         requires A <Int 1 <<Int B [simplification, concrete( A , B )]
@@ -64,7 +64,7 @@ module SOLADY-LEMMAS
     //     andBool log2Int ( B ) <Int log2Int ( X )
     //    [simplification, concrete(X)]
 //
-    //rule log2Int ( bool2Word ( _ ) <<Int X ) <Int Y => true 
+    //rule log2Int ( bool2Word ( _ ) <<Int X ) <Int Y => true
     //    requires X <Int Y
     //    [simplification, concrete(X,Y)]
 
@@ -72,12 +72,12 @@ module SOLADY-LEMMAS
     //    requires A <Int log2Int ( X )
     //     andBool B <Int log2Int ( X )
     //    [simplification, concrete(X,A,B)]
-    
+
     //rule A <Int bool2Word ( _ ) <<Int B => false
     //    requires A >=Int 2 ^Int B andBool B <Int 256 [simplification, concrete( A , B )]
     //rule A <Int bool2Word ( X ) <<Int B => X
     //    requires A <Int 2 ^Int B andBool B <Int 256 [simplification, concrete( A , B )]
-    
+
     //
     // ML
     //
@@ -85,11 +85,11 @@ module SOLADY-LEMMAS
     //rule #Not ( ( { false #Equals X:Bool } #And { false #Equals Y:Bool } ) ) => {true #Equals X } #Or { true #Equals Y } [simplification]
 
     rule #Not ( { false #Equals X:Bool andBool Y:Bool } ) => {true #Equals X } #And { true #Equals Y } [simplification]
-    
+
     //
     // Arithmetic
     //
-    
+
     rule X xorInt maxUInt256 => maxUInt256 -Int X
       requires #rangeUInt ( 256 , X )
       [simplification]
@@ -98,16 +98,16 @@ endmodule
 
 module SOLADY-LEMMAS-SPEC
     imports SOLADY-LEMMAS
-    
+
     //claim [log2-01]: <k> runLemma(chop (bool2Word ( X:Bool ) <<Int 7)) => doneLemma(128) ...  </k>
     //  requires X:Bool
-    
+
     //claim [log2-02]: <k> runLemma(chop (bool2Word ( X:Bool ) <<Int 7)) => doneLemma(0) ...  </k>
     //  requires notBool X:Bool
-    
+
     //claim [log2-03]: <k> runLemma(1 <<Word (bool2Word ( X:Bool ) <<Int 7)) => doneLemma(pow128) ...  </k>
     //  requires X:Bool
-    
+
     //claim [log2-04]: <k> runLemma(bool2Word ( X:Bool ) <<Int 7) => doneLemma(128) ...  </k>
     //  requires X:Bool
 
