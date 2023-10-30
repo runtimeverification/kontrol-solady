@@ -13,7 +13,7 @@ concurrency:
 jobs:
   new-version-test:
     name: 'Test Proofs'
-    runs-on: [self-hosted, linux, normal]
+    runs-on: [self-hosted, linux, prover]
     steps:
       - name: 'Check out code'
         uses: actions/checkout@v3
