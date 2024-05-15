@@ -10,16 +10,28 @@ contract FixedPointMathLibVerification is Test, KontrolCheats {
     // Constants
     uint256 constant WAD = 1e18;
 
+    // Public wrapper for mulWad since Kontrol doesn't support vm.expectRevert
+    // for internal calls, and FixedPointMathLib.mulWad is internal
+    function mulWad(uint x, uint y) public pure returns (uint256) {
+        return FixedPointMathLib.mulWad(x, y);
+    }
+
+    // Public wrapper for mulWadUp since Kontrol doesn't support vm.expectRevert
+    // for internal calls, and FixedPointMathLib.mulWadUp is internal
+    function mulWadUp(uint x, uint y) public pure returns (uint256) {
+        return FixedPointMathLib.mulWadUp(x, y);
+    }
+
     function testMulWad(uint256 x, uint256 y) public {
 
         if(y == 0 || x <= type(uint256).max / y) {
             uint256 zSpec = (x * y) / WAD;
             uint256 zImpl = FixedPointMathLib.mulWad(x, y);
 
-            assertEq(zImpl, zSpec);
+            assert(zImpl == zSpec);
         } else {
-            vm.expectRevert(); // FixedPointMathLib.MulWadFailed.selector
-            FixedPointMathLib.mulWad(x, y);
+            vm.expectRevert(FixedPointMathLib.MulWadFailed.selector); // FixedPointMathLib.MulWadFailed.selector
+            mulWad(x, y);
         }
 
     }
@@ -30,10 +42,10 @@ contract FixedPointMathLibVerification is Test, KontrolCheats {
             uint256 zSpec = ((x * y)/WAD)*WAD < x * y ? (x * y)/WAD + 1 : (x * y)/WAD;
             uint256 zImpl = FixedPointMathLib.mulWadUp(x, y);
 
-            assertEq(zImpl, zSpec);
+            assert(zImpl == zSpec);
         } else {
-            vm.expectRevert(); // FixedPointMathLib.MulWadFailed.selector
-            FixedPointMathLib.mulWadUp(x, y);
+            vm.expectRevert(FixedPointMathLib.MulWadFailed.selector); // FixedPointMathLib.MulWadFailed.selector
+            mulWadUp(x, y);
         }
     }
 }
