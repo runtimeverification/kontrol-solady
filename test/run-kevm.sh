@@ -7,14 +7,15 @@ forge_build() {
 }
 
 kontrol_kompile() {
-    kontrol build                     \
-            --verbose                 \
-            --require ${lemmas}       \
-            --module-import ${module} \
+    GHCRTS='' kontrol build                     \
+          --verbose                 \
+          --require ${lemmas}       \
+          --module-import ${module} \
             ${rekompile}
 }
 
 kontrol_prove() {
+    export GHCRTS='-N6'
     kontrol prove                              \
             --max-depth ${max_depth}           \
             --max-iterations ${max_iterations} \
@@ -29,7 +30,8 @@ kontrol_prove() {
             ${break_every_step}                \
             ${break_on_calls}                  \
             ${tests}                           \
-            ${use_booster}
+            --max-frontier-parallel 6 \
+            --kore-rpc-command 'kore-rpc-booster --equation-max-recursion 10'
 }
 
 kontrol_claim() {
