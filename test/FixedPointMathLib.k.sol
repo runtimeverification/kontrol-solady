@@ -7,6 +7,9 @@ import "kontrol-cheatcodes/KontrolCheats.sol";
 
 contract FixedPointMathLibVerification is Test, KontrolCheats {
 
+    // Constants
+    uint256 constant WAD = 1e18;
+
         // Public wrapper for mulWad since Kontrol doesn't support vm.expectRevert
     // for internal calls, and FixedPointMathLib.mulWad is internal
     function mulWad(uint x, uint y) public pure returns (uint256) {
@@ -44,6 +47,7 @@ contract FixedPointMathLibVerification is Test, KontrolCheats {
             vm.expectRevert(FixedPointMathLib.MulWadFailed.selector); // FixedPointMathLib.MulWadFailed.selector
             this.mulWadUp(x, y);
         }
+    }
 
     //function log2(uint256 x) internal pure returns (uint256 r) {
     //    /// @solidity memory-safe-assembly
