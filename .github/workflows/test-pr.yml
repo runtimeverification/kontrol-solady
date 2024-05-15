@@ -38,7 +38,7 @@ jobs:
       - name: "Start Docker Container"
         uses: ./.github/actions/with-docker
         with:
-          container-version: '${{ env.kontrol-version }}'
+          container-name: '${{ env.repository_basename }}-ci'
 
       - name: 'Run Kontrol'
         run: |
