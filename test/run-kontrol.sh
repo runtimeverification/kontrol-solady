@@ -23,7 +23,6 @@ kontrol_prove() {
             ${break_on_calls}                  \
             ${auto_abstract}                   \
             ${tests}                           \
-            --smt-tactic '(check-sat-using smt)'
 }
 
 lemmas=test/solady-lemmas-mod.k
