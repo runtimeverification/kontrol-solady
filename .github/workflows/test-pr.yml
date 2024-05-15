@@ -13,7 +13,7 @@ concurrency:
 jobs:
   new-version-test:
     name: 'Test Proofs'
-    runs-on: [self-hosted, linux, normal]
+    runs-on: [self-hosted, linux, prover]
     steps:
       - name: 'Check out code'
         uses: actions/checkout@v3
@@ -32,18 +32,20 @@ jobs:
       - name: Docker Login w/ Github Token
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: rvdockerhub
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: "Start Docker Container"
         uses: ./.github/actions/with-docker
         with:
           container-name: '${{ env.repository_basename }}-ci'
-          container-version: '${{ env.kontrol-version }}'
 
-      - name: 'Test New Tool Versions'
+      - name: 'Run Kontrol'
         run: |
           # Run the following in the running docker container
-          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c 'ls -l /home/ubuntu/workspace'
-          docker exec -u ubuntu ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
+          docker exec -u user ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
+
+      - name: 'Stop Docker Container'
+        if: always()
+        run: |
+          docker stop --time=0 ${{ env.repository_basename }}-ci

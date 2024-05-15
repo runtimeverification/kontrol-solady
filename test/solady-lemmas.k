@@ -202,4 +202,18 @@ module SOLADY-LEMMAS-SPEC
       </k>
       requires VV0_x_114b9705 <=Int maxUInt192
 
+    claim [mulWadUp-second-roadblock]: <k> runLemma( notBool ( ( notBool X:Int ==Int 0 ) andBool maxUInt256 /Word X:Int <Int Y:Int ) ) => doneLemma(false) ... </k>
+      requires ( notBool ( notBool ( ( notBool X:Int ==Int 0 ) andBool maxUInt256 /Word X:Int <Int Y:Int ) ) )
+      andBool Y =/=Int 0
+      andBool #rangeUInt(256, Y)
+      andBool #rangeUInt(256, X)
+      andBool X:Int <=Int ( maxUInt256 /Int Y:Int )
+
+    claim [mulWadUp-first-roadblock]: <k> runLemma( ( ( notBool ( ( notBool ( ( X:Int *Int Y:Int ) /Int 1000000000000000000 ) ==Int 0 ) andBool maxUInt256 /Word ( ( X:Int *Int Y:Int ) /Int 1000000000000000000 ) <Int 1000000000000000000 ) ) ) ) => doneLemma(true) ... </k>
+      requires notBool ( ( notBool X:Int ==Int 0 ) andBool maxUInt256 /Word X:Int <Int Y:Int )
+      andBool Y =/=Int 0
+      andBool #rangeUInt(256, Y)
+      andBool #rangeUInt(256, X)
+      andBool X:Int <=Int ( maxUInt256 /Int Y:Int )
+
 endmodule
