@@ -95,7 +95,7 @@ use_booster=
 tests=""
 #tests+="--test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
 #tests+="--test FixedPointMathLibVerification.testMulWadUp "
-tests+="--test FixedPointMathLibVerification.testMyLog2 "
+tests+="--match-test FixedPointMathLibVerification.testLog2 "
 
 # Name of the claim to execute
 claim=log2-06
