@@ -30,7 +30,7 @@ contract FixedPointMathLibVerification is Test, KontrolCheats {
 
             assert(zImpl == zSpec);
         } else {
-            vm.expectRevert(FixedPointMathLib.MulWadFailed.selector); // FixedPointMathLib.MulWadFailed.selector
+            vm.expectRevert(FixedPointMathLib.MulWadFailed.selector);
             this.mulWad(x, y);
         }
 
@@ -44,7 +44,7 @@ contract FixedPointMathLibVerification is Test, KontrolCheats {
 
             assert(zImpl == zSpec);
         } else {
-            vm.expectRevert(FixedPointMathLib.MulWadFailed.selector); // FixedPointMathLib.MulWadFailed.selector
+            vm.expectRevert(FixedPointMathLib.MulWadFailed.selector);
             this.mulWadUp(x, y);
         }
     }
