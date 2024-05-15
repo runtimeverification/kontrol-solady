@@ -70,7 +70,7 @@ contract FixedPointMathLibVerification is Test, KontrolCheats {
     //        assertEq(r,0);
     //}
 
-    function testLog2(uint256 x) public {
+    function testLog2(uint256 x) public pure {
 
         unchecked {
           uint256 y = x; uint256 z = 0;
