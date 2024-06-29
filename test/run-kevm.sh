@@ -7,14 +7,15 @@ forge_build() {
 }
 
 kontrol_kompile() {
-    kontrol build                     \
-            --verbose                 \
-            --require ${lemmas}       \
-            --module-import ${module} \
+    GHCRTS='' kontrol build                     \
+          --verbose                 \
+          --require ${lemmas}       \
+          --module-import ${module} \
             ${rekompile}
 }
 
 kontrol_prove() {
+    export GHCRTS='-N6'
     kontrol prove                              \
             --max-depth ${max_depth}           \
             --max-iterations ${max_iterations} \
@@ -29,7 +30,8 @@ kontrol_prove() {
             ${break_every_step}                \
             ${break_on_calls}                  \
             ${tests}                           \
-            ${use_booster}
+            --max-frontier-parallel 6 \
+            --kore-rpc-command 'kore-rpc-booster --equation-max-recursion 10'
 }
 
 kontrol_claim() {
@@ -51,7 +53,7 @@ smt_timeout=100000
 
 # Number of processes run by the prover in parallel
 # Should be at most (M - 8) / 8 in a machine with M GB of RAM
-workers=12
+workers=3
 
 # Switch the options below to turn them on or off
 rekompile=--rekompile
@@ -89,9 +91,10 @@ use_booster=--use-booster
 tests=""
 tests+="--match-test FixedPointMathLibVerification.testMulWad(uint256,uint256) "
 tests+="--match-test FixedPointMathLibVerification.testMulWadUp "
+tests+="--match-test FixedPointMathLibVerification.testLog2 "
 
 # Name of the claim to execute
-claim=mulWadUp-first-roadblock
+claim=log2-06
 
 # Comment these lines as needed
 pkill kore-rpc || true
