@@ -14,7 +14,7 @@ We employ two different types of specification for function verification: functi
 |------------|--------------------------------------------------------------------------------------------------------------------------|-------------|----------|
 | `wadMul`   | [solady/src/utils/FixedPointMathLib.sol](https://github.com/Vectorized/solady/blob/main/src/utils/FixedPointMathLib.sol) | No          | Yes      |
 | `wadMulUp` | [solady/src/utils/FixedPointMathLib.sol](https://github.com/Vectorized/solady/blob/main/src/utils/FixedPointMathLib.sol) | No          | Yes      |
-
+| `log2    ` | [solady/src/utils/FixedPointMathLib.sol](https://github.com/Vectorized/solady/blob/main/src/utils/FixedPointMathLib.sol) | No          | Yes      |
 
 ## Repository Structure
 
