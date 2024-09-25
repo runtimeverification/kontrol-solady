@@ -1,0 +1,50 @@
+[build.default]
+foundry-project-root       = '.'
+regen                      = true
+rekompile                  = true
+verbose                    = false
+debug                      = false
+require                    = 'test/solady-lemmas.k'
+module-import              = 'FixedPointMathLibVerification:SOLADY-LEMMAS'
+ast                        = true
+auxiliary-lemmas           = true
+
+[prove.default]
+foundry-project-root       = '.'
+verbose                    = false
+debug                      = false
+max-depth                  = 100000
+max-iterations             = 10000
+reinit                     = false
+cse                        = false
+workers                    = 1
+max-frontier-parallel      = 8
+maintenance-rate           = 128
+assume-defined             = true
+no-log-rewrites            = true
+kore-rpc-command           = 'kore-rpc-booster --no-post-exec-simplify'
+failure-information        = true
+counterexample-information = true
+minimize-proofs            = false
+fail-fast                  = true
+smt-timeout                = 16000
+smt-retry-limit            = 0
+break-every-step           = false
+break-on-jumpi             = false
+break-on-calls             = false
+break-on-storage           = false
+break-on-basic-blocks      = false
+break-on-cheatcodes        = false
+auto_abstract              = true
+run-constructor            = false
+match-test                 = [
+        "FixedPointMathLibVerification.testMulWad(uint256,uint256)",
+        "FixedPointMathLibVerification.testMulWadUp",
+        "FixedPointMathLibVerification.testLog2"
+    ]
+ast                        = true
+
+[show.default]
+foundry-project-root       = '.'
+verbose                    = true
+debug                      = false

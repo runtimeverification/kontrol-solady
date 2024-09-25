@@ -20,7 +20,7 @@ jobs:
         with:
           token: ${{ secrets.JENKINS_GITHUB_PAT }}
           fetch-depth: 0
-      
+
       - name: 'Get Kontrol Version'
         run: |
           set -euo pipefail
@@ -43,7 +43,7 @@ jobs:
       - name: 'Run Kontrol'
         run: |
           # Run the following in the running docker container
-          docker exec -u user ${{ env.repository_basename }}-ci bash -c './test/run-kevm.sh'
+          docker exec -u user ${{ env.repository_basename }}-ci bash -c 'kontrol build; kontrol prove --maintenance-rate 128'
 
       - name: 'Stop Docker Container'
         if: always()
