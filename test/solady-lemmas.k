@@ -96,11 +96,11 @@ module SOLADY-LEMMAS
       requires 0 <=Int A andBool A <Int B
       [simplification]
 
-    rule A *Int B <Int C => A <Int C /Int B
+    rule B *Int A <Int C => A <Int C /Int B
       requires C modInt B ==Int 0
       [simplification, concrete(B, C)]
 
-    rule A <=Int B *Int C => A /Int C <=Int B
+    rule A <=Int C *Int B => A /Int C <=Int B
       requires A modInt C ==Int 0
       [simplification, concrete(A, C)]
 
@@ -114,22 +114,22 @@ module SOLADY-LEMMAS
     syntax Int ::= "cachedBytesConstant" [alias]
     rule cachedBytesConstant => 6928917744019834342450304135053993530982274426945361611473370484834304
 
-    rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 => 0
+    rule ( cachedBytesConstant >>Int ( 8 *Int ( maxUInt5 -Int Y ) ) ) modInt 256 => 0
       requires 0 <=Int Y andBool Y <Int 32
        andBool ( Y <=Int 1 orBool Y >=Int 16 )
       [simplification]
 
-    rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 => 1
+    rule ( cachedBytesConstant >>Int ( 8 *Int ( maxUInt5 -Int Y ) ) ) modInt 256 => 1
       requires 0 <=Int Y andBool Y <Int 32
        andBool 1 <Int Y andBool Y <=Int 3
       [simplification]
 
-    rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 => 2
+    rule ( cachedBytesConstant >>Int ( 8 *Int ( maxUInt5 -Int Y ) ) ) modInt 256 => 2
       requires 0 <=Int Y andBool Y <Int 32
        andBool 3 <Int Y andBool Y <=Int 7
       [simplification]
 
-    rule ( cachedBytesConstant >>Int ( ( maxUInt5 -Int Y ) *Int 8 ) ) modInt 256 => 3
+    rule ( cachedBytesConstant >>Int ( 8 *Int ( maxUInt5 -Int Y ) ) ) modInt 256 => 3
       requires 0 <=Int Y andBool Y <Int 32
        andBool 7 <Int Y andBool Y <=Int 15
       [simplification]
